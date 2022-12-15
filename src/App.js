@@ -6,22 +6,14 @@ const clientID = `?client_id=${process.env.REACT_APP_ACCESS_KEY}`;
 const mainUrl = `https://api.unsplash.com/photos/`;
 const searchUrl = `https://api.unsplash.com/search/photos/`;
 
-// remove current scroll code
-// set default page to 1
-// setup two useEffects
-// don't run second on initial render
-// check for query value
-// if page 1 fetch images
-// otherwise setPage(1)
-// fix scroll functionality
-
 function App() {
   const [loading, setLoading] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
-  const mounted = useRef(false);
   const [newImages, setNewImages] = useState(false);
+  const mounted = useRef(false);
+
   const fetchImages = async () => {
     setLoading(true);
     let url;
@@ -44,17 +36,16 @@ function App() {
           return [...oldPhotos, ...data];
         }
       });
+
       setNewImages(false);
       setLoading(false);
     } catch (error) {
       setNewImages(false);
-
       setLoading(false);
     }
   };
   useEffect(() => {
     fetchImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   useEffect(() => {
@@ -64,7 +55,10 @@ function App() {
     }
     if (!newImages) return;
     if (loading) return;
-    setPage((oldPage) => oldPage + 1);
+    setPage((oldPage) => {
+      return oldPage + 1;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newImages]);
 
   const event = () => {
@@ -76,8 +70,8 @@ function App() {
   useEffect(() => {
     window.addEventListener('scroll', event);
     return () => window.removeEventListener('scroll', event);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!query) return;
